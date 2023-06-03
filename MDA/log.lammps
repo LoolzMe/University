@@ -1,0 +1,8 @@
+LAMMPS (29 Sep 2021 - Update 2)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+ #-------------------------------------------------------------------------------------------------------------------------
+units metal #What are the units you will use to specify various things in the input file?
+boundary p p p #Specify periodic boundary condition are needed in all three faces
+atom_style atomic #What style of atoms is to be used in the simulation
+log   logfile.txt #Write the log file to this text file. All thermodynamic information applicable to the entire system

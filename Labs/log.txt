@@ -1,0 +1,18 @@
+lzi@kali:/media/Lolzi/Linux_Yopta/Projects/MachineLearning/Statistics$ python3 Lab8.py 
+0.012399887992325682
+0.0005579647008540768
+1.3256571899156392e-05
+Lolzi@kali:/media/Lolzi/Linux_Yopta/Projects/MachineLearning/Statistics$ python3 Lab8.py 
+0.0038388378950979097
+0.0007710634651362161
+1.5710242495264026e-05
+Lolzi@kali:/media/Lolzi/Linux_Yopta/Projects/MachineLearning/Statistics$ python3 Lab8.py 
+0.008843880788728916
+0.0010165540782124897
+2.2147944287254076e-05
+Lolzi@kali:/media/Lolzi/Linux_Yopta/Projects/MachineLearning/Statistics$ python3 Lab8.py 
+0.0064995088399316505
+8.039193142019389e-05
+1.8372294586382185e-06
+
+

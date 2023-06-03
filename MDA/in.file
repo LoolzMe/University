@@ -1,0 +1,62 @@
+ #-------------------------------------------------------------------------------------------------------------------------
+units metal #What are the units you will use to specify various things in the input file?
+boundary p p p #Specify periodic boundary condition are needed in all three faces
+atom_style atomic #What style of atoms is to be used in the simulation
+log   logfile.txt #Write the log file to this text file. All thermodynamic information applicable to the entire system
+#================================================
+
+region forbox block 0 1000 0 1000 0 1000 units box
+#Refers to an abstract geometric region of space. units box refers to the fact that the size of the box is specified in the units as given in the units command. The name "forbox" refers to the region ID so that you can refer to it somewhere else in this input script.
+create_box 1 forbox #Create the box
+
+#=======================================================================
+#lattice fcc 0.0458 # Since we have given fcc as lattice type no need to mention basis for this
+#=======================================================================
+
+variable n_atoms equal round(8042.72)
+create_atoms 1 random ${n_atoms} 30122 NULL # basis 1 1 basis 2 1 basis 3 1 basis 4 1 units box
+# create_atoms 1 region forbox qrand 0.03289889035 
+# set type 1 diameter 1.42
+mass 1 39.948 #Mass of atom type 1 is 39.948 [mass units grams/mole]
+neighbor 0.1 bin
+neigh_modify delay 10 check no
+
+pair_style lj/cut 10 
+# k_B = 8.6173303e-5 eV/K #How are atoms interacting. Provide the name of the potential and the cooresponding cut-off distance
+pair_coeff  1 1 0.0163 3.405 #The coefficient of the lj potential for the interactions of atom type 1 with 1
+#=======================================================================
+group ar type 1 #Group all the argon types (argon type is of type 1). All atoms of type 1 are in group with the name 'ar'
+#=======================================================================
+dump dump_1 all custom 1 dump_initial_config.dump id type x y z ix iy iz vx vy vz
+#=========================================================
+run 1
+undump dump_1 # Stop dumping to this file
+#=======================================================
+minimize 1e-25 1e-19 10000 10000 #<Minimize the energy using a conjugate gradient step.
+print "Finished Minimizing"
+#minimize etol ftol maxiter for minimizer maxiter for force_energy valuation
+variable ener equal pe
+#=========================================================
+timestep  0.01
+velocity all create 900 102939 #dist gaussian mom yes rot yes
+# Set the velocities of all the atoms so that the temperature of the system is T. Make the distribution Gaussian.
+# fix 1 all nve #this is equlibration process.
+fix 1 all nvt temp 900.0 900.0 1 
+# fix temperature 
+print "Fixing"
+# compute 1 all property/atom vx vy vz
+compute 1 all pressure thermo_temp ke
+# compute 1 all temp/region forbox
+
+dump dump_1 all custom 100 trj.lammpsdump id type x y z ix iy iz vx vy vz #<Dump all the atoms to the file dump.min>
+variable poten equal pe-${ener}
+thermo_style  custom step time temp pe ke enthalpy press vol v_poten
+#What to print in the logfile.txt
+#=========================================================
+thermo 100 #How frequently to print the thermodynamic information#
+run 10000000 # run with active settings as many runs as required. timestep*No. of. steps =10ps
+undump dump_1 # Stop dumping information to the dump file.
+unfix 1
+# Unfix the NVE. Additional lines if any will assume that this fix is off.
+#End
+#------------------------------------------------------------------------------------------------------------------------
